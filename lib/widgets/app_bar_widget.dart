@@ -4,22 +4,22 @@ import 'package:pokemon_pokedex_app/widgets/team_overlay.dart';
 
 class AppBarWidget extends StatelessWidget  implements PreferredSizeWidget {
   final String title;
-  final bool? isFavButtonPresent;
-  final bool? isTeamsButtonPresent;
+  final bool isFavButtonPresent;
+  final bool isTeamsButtonPresent;
 
   const AppBarWidget({
-    super.key, 
+    super.key,
     required this.title,
-    this.isFavButtonPresent,
-    this.isTeamsButtonPresent,
-    });
+    this.isFavButtonPresent = true,
+    this.isTeamsButtonPresent = true,
+  });
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
       title: Text(title),
       actions: [
-        if (isFavButtonPresent ?? true)
+        if (isFavButtonPresent)
         IconButton(
           icon: const Icon(Icons.favorite), 
           onPressed: () {
@@ -30,7 +30,7 @@ class AppBarWidget extends StatelessWidget  implements PreferredSizeWidget {
             ),
           );
         }),
-        if (isTeamsButtonPresent ?? true)
+        if (isTeamsButtonPresent)
         IconButton(
           icon: const Icon(Icons.group),
           onPressed: () {

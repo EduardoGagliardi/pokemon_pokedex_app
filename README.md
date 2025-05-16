@@ -28,6 +28,7 @@
 
 #### Génération SCREEN :
 - **[App bar]**.
+- **[Sear bar]**
 - Liste Scroll **[Display pokemon widget]**.
 <br/><br/>![Generation Screen Prototype](readme_img/generation_screen_prototype.png)
 
@@ -39,3 +40,6 @@
 - Nom du pokemon.
 - Icon du pokemon.
 - Types du pokemon.
+
+#### Search Bar :
+- Input pout une recherche.

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:pokemon_pokedex_app/models/pokemon.dart';
 import 'package:pokemon_pokedex_app/services/api_service.dart';

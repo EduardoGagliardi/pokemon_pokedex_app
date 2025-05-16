@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:pokemon_pokedex_app/screens/favorites_screen.dart';
 import 'package:pokemon_pokedex_app/widgets/app_bar_widget.dart';
 import '../models/generation.dart';
 import '../models/pokemon.dart';
 import '../services/api_service.dart';
 import '../widgets/display_pokemon_widget.dart';
-import '../widgets/team_overlay.dart';
 
 class GenerationScreen extends StatefulWidget {
   final Generation generation;
