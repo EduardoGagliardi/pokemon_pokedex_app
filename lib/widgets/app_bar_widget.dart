@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pokemon_pokedex_app/screens/favorites_screen.dart';
 import 'package:pokemon_pokedex_app/widgets/team_overlay.dart';
 
-class AppBarWidget extends StatelessWidget  implements PreferredSizeWidget {
+class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final bool isFavButtonPresent;
   final bool isTeamsButtonPresent;

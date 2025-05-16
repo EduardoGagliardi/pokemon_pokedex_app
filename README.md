@@ -10,6 +10,7 @@
 - Ajouter/Retirer un pokemon à une liste de favoris **[button_icon fav]** **[local storage]** **(liste scroll)** **[screen dédié]**.
 - Ajouter/Retirer un pokemon à une equipe (max 6) **[side bar]**.
 - Affichage détails d'un pokemon quand on clique dessus **[popup overlay]**.
+- Faire une recherche dans une génération de pokemon.
 
 <br/>
 

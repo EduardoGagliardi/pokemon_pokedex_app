@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:pokemon_pokedex_app/models/flavor_texts.dart';
 import '../models/generation.dart';
 import '../models/pokemon.dart';
 
@@ -14,8 +16,12 @@ class ApiService {
       final List<dynamic> results = jsonDecode(response.body)['results'];
       final List<Generation> generations = [];
 
-      for (var result in results) {
-        final detailResponse = await http.get(Uri.parse(result['url']));
+      Iterable<Future<http.Response>> stagedFurtures = results.map((result) => 
+        http.get(Uri.parse(result['url']))
+      );
+      final detailResponses = await Future.wait(stagedFurtures);
+
+      for (final detailResponse in detailResponses) {
         if (detailResponse.statusCode == 200) {
           final detailJson = jsonDecode(detailResponse.body);
           generations.add(Generation.fromJson(detailJson));
@@ -40,6 +46,18 @@ class ApiService {
     throw Exception('Failed to load species for generation $generationId');
   }
 
+  /// Fetch Pokemon Species falvor text.
+  static Future<FlavorTexts> fetchPokemonFlavorTextsByName(String name) async {
+    final response = await http.get(Uri.parse('$baseUrl/pokemon-species/$name'));
+
+    if (response.statusCode == 200) {
+      final json = jsonDecode(response.body);
+      return FlavorTexts.fromJson(json);
+    }
+
+    throw Exception('Failed to load species for flavor texts $name');
+  }
+
   /// Fetch Pokémon details by its URL
   static Future<Pokemon?> fetchPokemonByUrl(String url) async {
     final response = await http.get(Uri.parse(url));
@@ -60,32 +78,38 @@ class ApiService {
     return null;
   }
 
+  /// Fetch Pokémon details by its Name
+  static Future<Pokemon?> fetchPokemonByName(String name) async {
+    final response = await http.get(Uri.parse("$baseUrl/pokemon/$name"));
+    if (response.statusCode == 200) {
+      final json = jsonDecode(response.body);
+      return Pokemon.fromJson(json);
+    }
+    return null;
+  }
+
   /// Search Pokémon by name (partial match)
-  static Future<List<Pokemon>> searchPokemon(String searchTerm) async {
-    final response = await http.get(Uri.parse('$baseUrl/pokemon?name=$searchTerm&limit=25'));
+  static Future<List<Pokemon>> searchPokemon(int generationId, String searchTerm) async {
+    final response = await http.get(Uri.parse('$baseUrl/generation/$generationId'));
     
     if (response.statusCode == 200) {
       final json = jsonDecode(response.body);
-      final List<dynamic> results = json['results'];
+      final List<dynamic> results = json['pokemon_species'];
       
       // Filter results that contain the search term
       final filteredResults = results
-          .map((pokemon) => 
-            Future<Pokemon?>.sync(() async {
-              final detailResponse = await http.get(Uri.parse(pokemon['url']));
-              if (detailResponse.statusCode == 200) {
-                final detailJson = jsonDecode(detailResponse.body);
-                return Pokemon.fromJson(detailJson);
-              }
-              return null;
-            })
-          ).toList();
-      
-      // Wait for all Pokémon details to be fetched
-      final pokemons = await Future.wait(filteredResults);
-      return pokemons.where((p) => p != null).map((p) => p!).toList();
-    } else {
-      throw Exception('Failed to search Pokémon');
+        .where((pokemon) {
+          final name = pokemon["name"]?.toString().toLowerCase();
+          return name != null && name.contains(searchTerm.toLowerCase());
+        }).toList();
+
+      List<Future<Pokemon?>> stagedFutures = filteredResults.map((poke) =>
+        fetchPokemonByName(poke["name"].toString().toLowerCase())
+      ).toList();
+
+      List<Pokemon?> pokeList = await Future.wait(stagedFutures);
+      return pokeList.whereType<Pokemon>().toList();
     }
+    throw Exception('Failed to load queried pokemons');
   }
 }

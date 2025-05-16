@@ -58,7 +58,7 @@ class _GenerationScreenState extends State<GenerationScreen> {
 
   Future<void> _performSearch() async {
     try {
-      final results = await ApiService.searchPokemon(searchQuery.toLowerCase());
+      final results = await ApiService.searchPokemon(widget.generation.id, searchQuery.toLowerCase());
       setState(() {
         searchResults = results;
         // Reset the scroll position when new results are loaded
@@ -70,8 +70,6 @@ class _GenerationScreenState extends State<GenerationScreen> {
       );
     }
   }
-
-
 
   void _onScroll() {
     if (_scrollController.position.pixels >=
@@ -122,18 +120,13 @@ class _GenerationScreenState extends State<GenerationScreen> {
     }
 
     // Fetch Pokemon details for this page
-    List<Pokemon> newPokemons = [];
-    for (var species in slice) {
-      final detailUrl = species['url']
-          .replaceFirst('/pokemon-species/', '/pokemon/');
-      final poke = await ApiService.fetchPokemonByUrl(detailUrl);
-      if (poke != null) {
-        newPokemons.add(poke);
-      }
-    }
+    Iterable<Future<Pokemon?>> stagedFutures = slice.map((species) => 
+      ApiService.fetchPokemonByUrl(species['url'].replaceFirst('/pokemon-species/', '/pokemon/'))
+    );
+    List<Pokemon?> pokes = await Future.wait(stagedFutures);
 
     setState(() {
-      loadedPokemons.addAll(newPokemons);
+      loadedPokemons.addAll(pokes.whereType<Pokemon>());
       currentPage++;
       isLoading = false;
       if (loadedPokemons.length >= speciesList.length) {

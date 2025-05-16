@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pokemon_pokedex_app/screens/pokemon_screen.dart';
 import '../models/pokemon.dart';
 import '../services/local_storage_service.dart';
 
@@ -85,7 +86,12 @@ class _DisplayPokemonWidgetState extends State<DisplayPokemonWidget> {
           ],
         ),
         onTap: () {
-          // TODO: Show Pokemon detail overlay
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => PokemonScreen(pokemon: widget.pokemon),
+            ),
+          );
         },
       ),
     );

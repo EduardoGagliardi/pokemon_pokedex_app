@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pokemon_pokedex_app/screens/pokemon_screen.dart';
 import '../models/pokemon.dart';
 import '../services/local_storage_service.dart';
 import '../services/api_service.dart';
@@ -60,30 +61,48 @@ class _TeamOverlayState extends State<TeamOverlay> {
               ),
               const SizedBox(height: 10),
               Expanded(
-                child: isLoading
-                    ? const Center(child: CircularProgressIndicator())
-                    : teamPokemons.isEmpty
+                child:
+                    isLoading
+                        ? const Center(child: CircularProgressIndicator())
+                        : teamPokemons.isEmpty
                         ? const Center(child: Text('No Pokémon in team.'))
                         : ListView.builder(
-                            controller: controller,
-                            itemCount: teamPokemons.length,
-                            itemBuilder: (context, index) {
-                              final poke = teamPokemons[index];
-                              return Card(
-                                child: ListTile(
-                                  leading: Image.network(poke.imageUrl),
-                                  title: Text(
-                                    poke.name[0].toUpperCase() + poke.name.substring(1),
-                                  ),
-                                  subtitle: Text('Types: ${poke.types.join(', ')}'),
-                                  trailing: IconButton(
-                                    icon: const Icon(Icons.remove_circle, color: Colors.red),
-                                    onPressed: () => _removeFromTeam(poke.id),
-                                  ),
+                          controller: controller,
+                          itemCount: teamPokemons.length,
+                          itemBuilder: (context, index) {
+                            final poke = teamPokemons[index];
+                            return Card(
+                              child: ListTile(
+                                leading: Image.network(poke.imageUrl),
+                                title: Text(
+                                  poke.name[0].toUpperCase() +
+                                      poke.name.substring(1),
                                 ),
-                              );
-                            },
-                          ),
+                                subtitle: Text(
+                                  'Types: ${poke.types.join(', ')}',
+                                ),
+                                trailing: IconButton(
+                                  icon: const Icon(
+                                    Icons.remove_circle,
+                                    color: Colors.red,
+                                  ),
+                                  onPressed: () => _removeFromTeam(poke.id),
+                                ),
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder:
+                                          (_) => PokemonScreen(
+                                            pokemon: teamPokemons[index],
+                                          ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            );
+                          },
+                        ),
               ),
             ],
           ),
