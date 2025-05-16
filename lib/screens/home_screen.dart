@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-<<<<<<< HEAD
 import 'package:pokemon_pokedex_app/screens/favorites_screen.dart';
-=======
 import 'package:pokemon_pokedex_app/widgets/team_overlay.dart';
->>>>>>> origin/Eduardo_dev
 import '../models/generation.dart';
 import '../services/api_service.dart';
 import '../widgets/display_generation_widget.dart';
