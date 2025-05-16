@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:pokemon_pokedex_app/models/pokemon.dart';
 import 'package:pokemon_pokedex_app/services/api_service.dart';
 import 'package:pokemon_pokedex_app/services/local_storage_service.dart';
+import 'package:pokemon_pokedex_app/widgets/app_bar_widget.dart';
 import 'package:pokemon_pokedex_app/widgets/display_pokemon_widget.dart';
 
 class FavoritesScreen extends StatefulWidget {
@@ -109,9 +110,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Favourites'),
-      ),
+      appBar: AppBarWidget(title: "Favourites", isFavButtonPresent: false,),
       body: ListView.builder(
         controller: _scrollController,
         itemCount: loadedPokemons.length + (isLoading ? 1 : 0),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pokemon_pokedex_app/screens/favorites_screen.dart';
+import 'package:pokemon_pokedex_app/widgets/app_bar_widget.dart';
 import '../models/generation.dart';
 import '../models/pokemon.dart';
 import '../services/api_service.dart';
@@ -111,34 +112,7 @@ class _GenerationScreenState extends State<GenerationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Génération ${widget.generation.id} - ${widget.generation.region}'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.favorite), 
-            onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (_) => FavoritesScreen(),
-              ),
-            );
-          }),
-          IconButton(
-            icon: const Icon(Icons.group),
-            onPressed: () {
-              showModalBottomSheet(
-                context: context,
-                isScrollControlled: true,
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(20))
-                ), 
-                builder: (_) => const TeamOverlay(),
-              );
-            }
-            )
-        ],
-      ),
+      appBar: AppBarWidget(title: "Génération ${widget.generation.id} - ${widget.generation.region}"),
       body: ListView.builder(
         controller: _scrollController,
         itemCount: loadedPokemons.length + (isLoading ? 1 : 0),
