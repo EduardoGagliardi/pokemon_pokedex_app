@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pokemon_pokedex_app/widgets/team_overlay.dart';
 import '../models/generation.dart';
 import '../services/api_service.dart';
 import '../widgets/display_generation_widget.dart';
@@ -26,8 +27,22 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: const Text('Pokédex'),
         actions: [
-          IconButton(icon: const Icon(Icons.favorite), onPressed: () {}),
-          IconButton(icon: const Icon(Icons.group), onPressed: () {}),
+          IconButton(
+            icon: const Icon(Icons.favorite), 
+            onPressed: () {}),
+          IconButton(
+            icon: const Icon(Icons.group),
+            onPressed: () {
+              showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                ),
+                builder: (_) => const TeamOverlay(),
+              );
+            },
+          ),
         ],
       ),
       body: FutureBuilder<List<Generation>>(
