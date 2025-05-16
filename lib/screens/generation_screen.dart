@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pokemon_pokedex_app/screens/favorites_screen.dart';
 import '../models/generation.dart';
 import '../models/pokemon.dart';
 import '../services/api_service.dart';
@@ -114,11 +115,15 @@ class _GenerationScreenState extends State<GenerationScreen> {
         title: Text('Génération ${widget.generation.id} - ${widget.generation.region}'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.favorite),
+            icon: const Icon(Icons.favorite), 
             onPressed: () {
-              // TODO: Navigate to favorites screen
-            },
-          ),
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => FavoritesScreen(),
+              ),
+            );
+          }),
           IconButton(
             icon: const Icon(Icons.group),
             onPressed: () {
