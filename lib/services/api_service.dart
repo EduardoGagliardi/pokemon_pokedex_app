@@ -49,4 +49,35 @@ class ApiService {
     }
     return null;
   }
+
+  /// Search Pokémon by name (partial match)
+  static Future<List<Pokemon>> searchPokemon(String searchTerm) async {
+    final response = await http.get(Uri.parse('$baseUrl/pokemon?limit=1000'));
+    
+    if (response.statusCode == 200) {
+      final json = jsonDecode(response.body);
+      final List<dynamic> results = json['results'];
+      
+      // Filter results that contain the search term
+      final filteredResults = results
+          .where((pokemon) => 
+              pokemon['name'].toString().contains(searchTerm.toLowerCase()))
+          .map((pokemon) => 
+            Future<Pokemon?>.sync(() async {
+              final detailResponse = await http.get(Uri.parse(pokemon['url']));
+              if (detailResponse.statusCode == 200) {
+                final detailJson = jsonDecode(detailResponse.body);
+                return Pokemon.fromJson(detailJson);
+              }
+              return null;
+            })
+          ).toList();
+      
+      // Wait for all Pokémon details to be fetched
+      final pokemons = await Future.wait(filteredResults);
+      return pokemons.where((p) => p != null).map((p) => p!).toList();
+    } else {
+      throw Exception('Failed to search Pokémon');
+    }
+  }
 }

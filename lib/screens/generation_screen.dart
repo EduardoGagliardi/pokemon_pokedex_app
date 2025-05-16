@@ -19,24 +19,58 @@ class _GenerationScreenState extends State<GenerationScreen> {
 
   late List<dynamic> speciesList = [];
   List<Pokemon> loadedPokemons = [];
+  List<Pokemon> searchResults = [];
   int currentPage = 0;
   bool isLoading = false;
   bool allLoaded = false;
+  bool isSearching = false;
+  String searchQuery = '';
 
   final ScrollController _scrollController = ScrollController();
+  final TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
+    _searchController.addListener(_onSearchChanged);
     fetchSpeciesList();
     _scrollController.addListener(_onScroll);
   }
 
   @override
   void dispose() {
+    _searchController.dispose();
     _scrollController.dispose();
     super.dispose();
   }
+
+  void _onSearchChanged() {
+    setState(() {
+      searchQuery = _searchController.text;
+      isSearching = searchQuery.isNotEmpty;
+      searchResults.clear();
+      if (isSearching && searchQuery.isNotEmpty) {
+        _performSearch();
+      }
+    });
+  }
+
+  Future<void> _performSearch() async {
+    try {
+      final results = await ApiService.searchPokemon(searchQuery.toLowerCase());
+      setState(() {
+        searchResults = results;
+        // Reset the scroll position when new results are loaded
+        _scrollController.jumpTo(0);
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error searching: $e')),
+      );
+    }
+  }
+
+
 
   void _onScroll() {
     if (_scrollController.position.pixels >=
@@ -109,14 +143,63 @@ class _GenerationScreenState extends State<GenerationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print('Building with isSearching: $isSearching');
     return Scaffold(
       appBar: AppBar(
-        title: Text('Génération ${widget.generation.id} - ${widget.generation.region}'),
+        title: !isSearching
+            ? Text('Generation ${widget.generation.name}')
+            : TextField(
+                controller: _searchController,
+                decoration: InputDecoration(
+                  hintText: 'Search Pokémon...',
+                  border: InputBorder.none,
+                  hintStyle: const TextStyle(color: Colors.white70),
+                  suffixIcon: IconButton(
+                    icon: const Icon(Icons.clear),
+                    onPressed: () {
+                      setState(() {
+                        isSearching = false;
+                        _searchController.clear();
+                        searchResults.clear();
+                        loadedPokemons.clear();
+                        currentPage = 0;
+                        fetchSpeciesList();
+                      });
+                    },
+                  ),
+                ),
+                style: const TextStyle(color: Colors.black),
+                autofocus: true,
+              ),
         actions: [
+          if (!isSearching)
+            IconButton(
+              icon: const Icon(Icons.search),
+              onPressed: () {
+                setState(() {
+                  isSearching = true;
+                  _searchController.clear();
+                });
+              },
+            ),
+          if (isSearching)
+            IconButton(
+              icon: const Icon(Icons.clear),
+              onPressed: () {
+                setState(() {
+                  isSearching = false;
+                  _searchController.clear();
+                  searchResults.clear();
+                  loadedPokemons.clear();
+                  currentPage = 0;
+                  fetchSpeciesList();
+                });
+              },
+            ),
           IconButton(
             icon: const Icon(Icons.favorite),
             onPressed: () {
-              // TODO: Navigate to favorites screen
+              Navigator.pushNamed(context, '/favorites');
             },
           ),
           IconButton(
@@ -126,27 +209,59 @@ class _GenerationScreenState extends State<GenerationScreen> {
                 context: context,
                 isScrollControlled: true,
                 shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(20))
-                ), 
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                ),
                 builder: (_) => const TeamOverlay(),
               );
-            }
-            )
+            },
+          ),
         ],
       ),
-      body: ListView.builder(
-        controller: _scrollController,
-        itemCount: loadedPokemons.length + (isLoading ? 1 : 0),
-        itemBuilder: (context, index) {
-          if (index < loadedPokemons.length) {
-            return DisplayPokemonWidget(pokemon: loadedPokemons[index]);
-          } else {
-            return const Padding(
-              padding: EdgeInsets.all(16),
+      body: Column(
+        children: [
+          Expanded(
+            child: ListView.builder(
+              controller: _scrollController,
+              padding: const EdgeInsets.all(8),
+              itemCount: isSearching 
+                  ? searchResults.length 
+                  : loadedPokemons.length + (isLoading ? 1 : 0),
+              itemBuilder: (context, index) {
+                if (isSearching) {
+                  if (index < searchResults.length) {
+                    return DisplayPokemonWidget(
+                      pokemon: searchResults[index],
+                      onFavoriteChanged: (pokemon) {
+                        setState(() {
+                          searchResults[index] = pokemon;
+                        });
+                      },
+                    );
+                  }
+                } else {
+                  if (index < loadedPokemons.length) {
+                    return DisplayPokemonWidget(
+                      pokemon: loadedPokemons[index],
+                      onFavoriteChanged: (pokemon) {
+                        setState(() {
+                          loadedPokemons[index] = pokemon;
+                        });
+                      },
+                    );
+                  } else {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                }
+                return const SizedBox.shrink();
+              },
+            ),
+          ),
+          if (isLoading && !isSearching)
+            const Padding(
+              padding: EdgeInsets.all(8.0),
               child: Center(child: CircularProgressIndicator()),
-            );
-          }
-        },
+            ),
+        ],
       ),
     );
   }

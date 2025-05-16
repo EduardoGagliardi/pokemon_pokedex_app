@@ -4,8 +4,13 @@ import '../services/local_storage_service.dart';
 
 class DisplayPokemonWidget extends StatefulWidget {
   final Pokemon pokemon;
+  final Function(Pokemon)? onFavoriteChanged;
 
-  const DisplayPokemonWidget({super.key, required this.pokemon});
+  const DisplayPokemonWidget({
+    super.key,
+    required this.pokemon,
+    this.onFavoriteChanged,
+  });
 
   @override
   _DisplayPokemonWidgetState createState() => _DisplayPokemonWidgetState();
@@ -33,6 +38,9 @@ class _DisplayPokemonWidgetState extends State<DisplayPokemonWidget> {
   void _toggleFavorite() async {
     await LocalStorageService.toggleFavorite(widget.pokemon.id);
     _loadStatus();
+    if (widget.onFavoriteChanged != null) {
+      widget.onFavoriteChanged!(widget.pokemon);
+    }
   }
 
   void _toggleTeam() async {
