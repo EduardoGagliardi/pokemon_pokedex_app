@@ -3,6 +3,7 @@ import '../models/generation.dart';
 import '../models/pokemon.dart';
 import '../services/api_service.dart';
 import '../widgets/display_pokemon_widget.dart';
+import '../widgets/team_overlay.dart';
 
 class GenerationScreen extends StatefulWidget {
   final Generation generation;
@@ -111,6 +112,27 @@ class _GenerationScreenState extends State<GenerationScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Génération ${widget.generation.id} - ${widget.generation.region}'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.favorite),
+            onPressed: () {
+              // TODO: Navigate to favorites screen
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.group),
+            onPressed: () {
+              showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(20))
+                ), 
+                builder: (_) => const TeamOverlay(),
+              );
+            }
+            )
+        ],
       ),
       body: ListView.builder(
         controller: _scrollController,
