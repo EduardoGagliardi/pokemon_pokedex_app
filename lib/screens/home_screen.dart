@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+<<<<<<< HEAD
 import 'package:pokemon_pokedex_app/screens/favorites_screen.dart';
+=======
+import 'package:pokemon_pokedex_app/widgets/team_overlay.dart';
+>>>>>>> origin/Eduardo_dev
 import '../models/generation.dart';
 import '../services/api_service.dart';
 import '../widgets/display_generation_widget.dart';
@@ -35,7 +39,19 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     );
           }),
-          IconButton(icon: const Icon(Icons.group), onPressed: () {}),
+          IconButton(
+            icon: const Icon(Icons.group),
+            onPressed: () {
+              showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                ),
+                builder: (_) => const TeamOverlay(),
+              );
+            },
+          ),
         ],
       ),
       body: FutureBuilder<List<Generation>>(
