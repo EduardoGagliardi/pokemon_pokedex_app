@@ -20,18 +20,15 @@
 - Icon boutton pour **[Favoris screen]**
 - Titre de l'application.
 - Icon boutton pour **[Pokemon team (popup Overlay)]**.
-<br/><br/>![App Bar Prototype](readme_img/app_bar_widget_prototype.png)
 
 #### Home SCREEN :
 - **[App bar]**.
 - Liste Scroll **[Display génération widget]**.
-<br/><br/>![Home Screen Prototype](readme_img/home_screen_prototype.png)
 
 #### Génération SCREEN :
 - **[App bar]**.
 - **[Sear bar]**
 - Liste Scroll **[Display pokemon widget]**.
-<br/><br/>![Generation Screen Prototype](readme_img/generation_screen_prototype.png)
 
 #### Display génération WIGET :
 - Title : "Génération n°x".
@@ -44,3 +41,24 @@
 
 #### Search Bar :
 - Input pout une recherche.
+
+### App preview :
+
+#### Home Screen :
+![home screen](readme_img/home_screen.png)
+
+#### Generation Screen :
+![home screen](readme_img/generation_screen.png)
+
+
+#### (Search) Generation Screen :
+![home screen](readme_img/search_generation_screen.png)
+
+#### Pokemon Screen :
+![home screen](readme_img/pokemon_screen.png)
+
+#### Favorites Screen :
+![home screen](readme_img/favorites_screen.png)
+
+#### Team Popup :
+![home screen](readme_img/team_popup.png)
