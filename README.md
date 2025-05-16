@@ -48,17 +48,17 @@
 ![home screen](readme_img/home_screen.png)
 
 #### Generation Screen :
-![home screen](readme_img/generation_screen.png)
+![Generation Screen](readme_img/generation_screen.png)
 
 
 #### (Search) Generation Screen :
-![home screen](readme_img/search_generation_screen.png)
+![(Search) Generation Screen](readme_img/search_generation_screen.png)
 
 #### Pokemon Screen :
-![home screen](readme_img/pokemon_screen.png)
+![Pokemon Screen](readme_img/pokemon_screen.png)
 
 #### Favorites Screen :
-![home screen](readme_img/favorites_screen.png)
+![Favorites Screen](readme_img/favorites_screen.png)
 
 #### Team Popup :
-![home screen](readme_img/team_popup.png)
+![Team Popup](readme_img/team_popup.png)
