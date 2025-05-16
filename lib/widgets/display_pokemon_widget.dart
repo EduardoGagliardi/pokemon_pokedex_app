@@ -22,7 +22,7 @@ class _DisplayPokemonWidgetState extends State<DisplayPokemonWidget> {
   }
 
   Future<void> _loadStatus() async {
-    final favSet = await LocalStorageService.getFavoriteIds();
+    final favSet = await LocalStorageService.getFavoriteIdsSet();
     final teamSet = await LocalStorageService.getTeamIds();
     setState(() {
       isFavorite = favSet.contains(widget.pokemon.id);

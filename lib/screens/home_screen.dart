@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pokemon_pokedex_app/screens/favorites_screen.dart';
 import '../models/generation.dart';
 import '../services/api_service.dart';
 import '../widgets/display_generation_widget.dart';
@@ -26,7 +27,14 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: const Text('Pokédex'),
         actions: [
-          IconButton(icon: const Icon(Icons.favorite), onPressed: () {}),
+          IconButton(icon: const Icon(Icons.favorite), onPressed: () {
+            Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => FavoritesScreen(),
+                      ),
+                    );
+          }),
           IconButton(icon: const Icon(Icons.group), onPressed: () {}),
         ],
       ),

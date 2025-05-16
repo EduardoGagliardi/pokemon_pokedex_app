@@ -23,9 +23,9 @@ class ApiService {
       }
 
       return generations;
-    } else {
-      throw Exception('Failed to load generations');
     }
+
+    throw Exception('Failed to load generations');
   }
 
   /// Fetch list of Pokémon species URLs for a given generation
@@ -35,14 +35,24 @@ class ApiService {
     if (response.statusCode == 200) {
       final json = jsonDecode(response.body);
       return json['pokemon_species'] as List<dynamic>;
-    } else {
-      throw Exception('Failed to load species for generation $generationId');
     }
+
+    throw Exception('Failed to load species for generation $generationId');
   }
 
   /// Fetch Pokémon details by its URL
   static Future<Pokemon?> fetchPokemonByUrl(String url) async {
     final response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      final json = jsonDecode(response.body);
+      return Pokemon.fromJson(json);
+    }
+    return null;
+  }
+
+  /// Fetch Pokémon details by its Id
+  static Future<Pokemon?> fetchPokemonById(int id) async {
+    final response = await http.get(Uri.parse("$baseUrl/pokemon/$id"));
     if (response.statusCode == 200) {
       final json = jsonDecode(response.body);
       return Pokemon.fromJson(json);

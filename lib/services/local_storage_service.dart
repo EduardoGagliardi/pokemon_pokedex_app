@@ -4,15 +4,21 @@ class LocalStorageService {
   static const String favoritesKey = 'favorites';
   static const String teamKey = 'team';
 
-  static Future<Set<int>> getFavoriteIds() async {
+  static Future<Set<int>> getFavoriteIdsSet() async {
     final prefs = await SharedPreferences.getInstance();
     final favList = prefs.getStringList(favoritesKey) ?? [];
     return favList.map(int.parse).toSet();
   }
 
+  static Future<List<int>> getFavoriteIdsList() async {
+    final prefs = await SharedPreferences.getInstance();
+    final favList = prefs.getStringList(favoritesKey) ?? [];
+    return favList.map(int.parse).toList();
+  }
+
   static Future<void> toggleFavorite(int pokemonId) async {
     final prefs = await SharedPreferences.getInstance();
-    final favSet = await getFavoriteIds();
+    final favSet = await getFavoriteIdsSet();
 
     if (favSet.contains(pokemonId)) {
       favSet.remove(pokemonId);
